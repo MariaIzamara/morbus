@@ -20,9 +20,9 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_centerHorizontal="true"
-            tools:text="A doença era:"
+            tools:text="A doença era: NOMEDOENÇA"
             android:layout_marginBottom="40dp"
-            android:textSize="25sp"
+            android:textSize="18sp"
             />
         <TextView
             android:id="@+id/txtTipoJogador"
@@ -30,9 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/txtDoencaRodada"
-            tools:text="Vc é X tipo de jogador"
+            tools:text="Você é tal tipo de jogador"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <ProgressBar
             android:id="@+id/chronoPlaceholder"
@@ -41,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtTipoJogador"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp" />
+            android:layout_marginTop="40dp"
+            android:indeterminateTint="@android:color/white"/>
 
     </RelativeLayout>
 </RelativeLayout>

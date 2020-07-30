@@ -4,12 +4,55 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".ui.main.MoreFragment">
 
     <RelativeLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorMenu">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:padding="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="1dp"
+            android:background="@null"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="@string/config"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imageLogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/logo"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/imageLogo">
+        android:layout_below="@id/menuLayout">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,44 +67,40 @@
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/reverInt"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnRegras"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/regrasPont"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnTema"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/roundbutton"
+                android:ems="9"
+                android:text="@string/escolherTema"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnCreditos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/creditos"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
         </LinearLayout>
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/imageLogo"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/labelLupa"
-        android:scaleType="fitCenter"
-        android:src="@drawable/logo"
-        android:visibility="visible"
-        android:scaleX="-1" />
 
 
 </RelativeLayout>

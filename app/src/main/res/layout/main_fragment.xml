@@ -7,6 +7,52 @@
     tools:context=".ui.main.MainFragment">
 
     <RelativeLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorMenu">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:padding="9dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/labelSetaEsq"
+            android:src="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="@string/morbus"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imageLogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/logo"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menuLayout">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/imageLogo">
@@ -24,53 +70,29 @@
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/estudo"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnModoInterativo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/interativo"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:contentDescription="@string/labelVirus"
-                android:src="@drawable/virus" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnMais"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/roundbutton"
                 android:ems="9"
                 android:text="@string/config"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/imageLogo"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/labelLupa"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/logo"
-        android:visibility="visible"
-        android:scaleX="-1" />
-
-
+</RelativeLayout>
 </RelativeLayout>

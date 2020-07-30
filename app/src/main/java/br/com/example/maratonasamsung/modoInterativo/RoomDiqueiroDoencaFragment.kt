@@ -20,6 +20,8 @@ import br.com.example.maratonasamsung.model.Responses.StatusBoolean
 import br.com.example.maratonasamsung.model.Responses.SessaoResponseListing
 import br.com.example.maratonasamsung.data.service.ErrorCases
 import br.com.example.maratonasamsung.data.service.Service
+import br.com.example.maratonasamsung.model.Requests.EditarSessaoRequest
+import br.com.example.maratonasamsung.model.Responses.SessaoResponseEditing
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,9 +29,8 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 
-class RoomDiqueiroDoencaFragment : Fragment() { //, View.OnClickListener
+class RoomDiqueiroDoencaFragment : Fragment() {
 
-    //    lateinit var spinnerAdapter: ArrayAdapter<String>
     var navController: NavController? = null
     val timerCronometro = Timer()
     val parametros = Bundle()
@@ -74,16 +75,17 @@ class RoomDiqueiroDoencaFragment : Fragment() { //, View.OnClickListener
 
         val id_sessao = requireArguments().getInt("id_sessao")
         val jogador = requireArguments().getString("jogador_nome").toString()
+        val doenca = requireArguments().getString("doenca").toString()
         val doencas = requireArguments().getStringArrayList("doencas")
 
-        jogadores(id_sessao)
         pegarRodada(id_sessao)
+        jogadores(id_sessao)
 
         timerCronometro.schedule(5000){
             parametros.putInt("id_sessao", id_sessao)
             parametros.putInt("rodada", rodada)
             parametros.putString("jogador_nome", jogador)
-            parametros.putString("doenca", doencas?.random())
+            parametros.putString("doenca", doenca)
             parametros.putStringArrayList("doencas", doencas)
 
             navController!!.navigate(R.id.action_roomDiqueiroDoencaFragment_to_roomDiqueiroDicasFragment, parametros)
@@ -103,31 +105,11 @@ class RoomDiqueiroDoencaFragment : Fragment() { //, View.OnClickListener
                 if (response.isSuccessful) {
                     val sessao = response.body()!!
                     rodada = sessao.sessao.rodada
+
+                    val doenca = requireArguments().getString("doenca").toString()
                 }
                 else {
                     Log.d("Erro do banco", response.message())
-                    context?.let { ErrorCases().error(it)}
-                }
-            }
-        })
-    }
-
-    fun jogadorEncerrar(id_sessao: Int, jogador: String) {
-        Service.retrofit.jogadorEncerrar(
-            jogador = JogadorRequest(
-                id_sessao = id_sessao,
-                nome = jogador
-            )
-        ).enqueue(object : Callback<StatusBoolean> {
-            override fun onFailure(call: Call<StatusBoolean>, t: Throwable) {
-                Log.d("Ruim: Jogador Encerrar", t.toString())
-            }
-
-            override fun onResponse(call: Call<StatusBoolean>, response: Response<StatusBoolean>) {
-                Log.d("Bom: Jogador Encerrar", response.body().toString())
-
-                if (response.code() == 500) {
-                    Log.d("Erro banco: JogadorEnc", response.message())
                     context?.let { ErrorCases().error(it)}
                 }
             }
@@ -176,6 +158,28 @@ class RoomDiqueiroDoencaFragment : Fragment() { //, View.OnClickListener
                 }
                 else {
                     Log.d("Erro banco: Ranking", response.message())
+                    context?.let { ErrorCases().error(it)}
+                }
+            }
+        })
+    }
+
+    fun jogadorEncerrar(id_sessao: Int, jogador: String) {
+        Service.retrofit.jogadorEncerrar(
+            jogador = JogadorRequest(
+                id_sessao = id_sessao,
+                nome = jogador
+            )
+        ).enqueue(object : Callback<StatusBoolean> {
+            override fun onFailure(call: Call<StatusBoolean>, t: Throwable) {
+                Log.d("Ruim: Jogador Encerrar", t.toString())
+            }
+
+            override fun onResponse(call: Call<StatusBoolean>, response: Response<StatusBoolean>) {
+                Log.d("Bom: Jogador Encerrar", response.body().toString())
+
+                if (response.code() == 500) {
+                    Log.d("Erro banco: JogadorEnc", response.message())
                     context?.let { ErrorCases().error(it)}
                 }
             }

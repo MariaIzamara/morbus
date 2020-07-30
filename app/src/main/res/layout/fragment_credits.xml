@@ -3,34 +3,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="20dp"
     tools:context=".ui.main.CreditsFragment">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/creditos"
-        android:textColor="@color/colorText"
-        android:textSize="30sp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorMenu">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:padding="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="1dp"
+            android:background="@null"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            android:text="@string/creditos"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imageLogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/logo"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menuLayout">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewTitle"
         android:layout_centerHorizontal="true"
         android:fadeScrollbars="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:divider="?android:listDivider"
             android:dividerPadding="2.5dp"
             android:orientation="vertical"
@@ -53,49 +86,19 @@
                     android:adjustViewBounds="true"
                     android:layout_marginStart="10dp"
                     android:scaleType="fitCenter"
-                    android:contentDescription="@string/labelLupa"
-                    android:src="@drawable/logo"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/textViewContent2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/creditsLogo"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:layout_marginStart="10dp"
-                    android:scaleType="fitCenter"
                     android:contentDescription="@string/labelFriendship"
                     android:src="@drawable/friendship"
                     android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/textViewContent3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsFriendship"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,7 +128,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_gravity="center"
                     android:text="@string/creditsBooks"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +158,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsGame"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -185,7 +188,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsGear"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -215,7 +218,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsBacteria"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -245,7 +248,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsPlatelminto"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -275,7 +278,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsProtozoario"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -305,7 +308,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsVirus"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -335,10 +338,71 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/creditsWinner"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/labelSad"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/sad"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewContent12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/creditsSad"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_marginStart="10dp"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/labelLupa"
+                    android:src="@drawable/logo"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewContent2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/creditsLogo"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+</RelativeLayout>
 </RelativeLayout>

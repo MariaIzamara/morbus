@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
@@ -20,12 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.example.maratonasamsung.R
 import br.com.example.maratonasamsung.model.Requests.JogadorRequest
 import br.com.example.maratonasamsung.model.Requests.JogadorUpdate
-import br.com.example.maratonasamsung.model.Responses.StatusBoolean
-import br.com.example.maratonasamsung.model.Responses.JogadorResponse
-import br.com.example.maratonasamsung.model.Responses.RankingResponse
-import br.com.example.maratonasamsung.model.Responses.SessaoResponseListing
 import br.com.example.maratonasamsung.data.service.ErrorCases
 import br.com.example.maratonasamsung.data.service.Service
+import br.com.example.maratonasamsung.model.Responses.*
 import kotlinx.android.synthetic.main.fragment_room_adivinhador.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,11 +39,9 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
     lateinit var spinnerAdapter: ArrayAdapter<String>
     val  vencedor = Bundle()
     val timerCronometro = Timer()
+    val timerAguardando = Timer()
     val timerRanking = Timer()
     val timerDicas = Timer()
-    lateinit var dicasAdapter: DicasAdapter
-    lateinit var rankingAdapter: RankingAdapter
-    var listDicas: ArrayList<String> = arrayListOf("")
     lateinit var doencaRodada: String
     var rodada: Int = 0
     var clicavel = true
@@ -78,6 +74,8 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
                         timerRanking.purge()
                         timerDicas.cancel()
                         timerDicas.purge()
+                        timerAguardando.cancel()
+                        timerAguardando.purge()
                         jogadorEncerrar(id_sessao, jogador)
                         navController!!.navigate(R.id.action_roomAdivinhadorFragment_to_expulsoSalaFragment)
                     }
@@ -93,6 +91,7 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         view.findViewById<Button>(R.id.adivinhadorBtnAdivinhar).setOnClickListener(this)
+        view.findViewById<ImageButton>(R.id.btn_back).setOnClickListener(this)
 
         val id_sessao = requireArguments().getInt("id_sessao")
         val doencas = requireArguments().getStringArrayList("doencas")
@@ -109,26 +108,26 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
         spinnerResposta.adapter = spinnerAdapter
 
         chronometro()
+        ranking(id_sessao)
         pegarRodadaDoenca(id_sessao)
         dicas(id_sessao)
-        ranking(id_sessao)
 
-        timerCronometro.schedule(45000) {
+        timerCronometro.schedule(65000) {
             val parametros = Bundle()
             parametros.putInt("id_sessao", id_sessao)
             parametros.putString("jogador_nome", jogador)
             parametros.putStringArrayList("doencas",doencas!!)
             parametros.putString("ultimaDoenca", doencaRodada)
 
-            jogadorUpdate(id_sessao,true)
+            jogadorUpdate(rodada,true)
+
             tempoCronometro.stop()
             timerRanking.cancel()
             timerRanking.purge()
             timerDicas.cancel()
             timerDicas.purge()
-            listDicas.clear()
 
-            if (rodada == 4){
+            if (rodada == 5){
                 jogadorEncerrar(id_sessao, jogador)
                 navController!!.navigate(R.id.action_roomAdivinhadorFragment_to_winnerFragment, vencedor)
             }
@@ -140,12 +139,13 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.N)
     fun chronometro(){
         tempoCronometro.isCountDown= true
-        tempoCronometro.base = SystemClock.elapsedRealtime()+45000
+        tempoCronometro.base = SystemClock.elapsedRealtime()+65000
         tempoCronometro.start()
     }
 
     override fun onClick(v: View?) {
         when(v!!.id){
+            R.id.btn_back -> activity?.onBackPressed()
             R.id.adivinhadorBtnAdivinhar -> {
                 val resposta = spinnerResposta.selectedItem.toString()
 
@@ -169,38 +169,39 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
         }
     }
 
-    private fun configureRecyclerViewRanking(list: RankingResponse) {
-        rankingAdapter = RankingAdapter(list)
-        recyclerRanking.apply {
-            layoutManager = LinearLayoutManager(context)
-            isComputingLayout
-            adapter= rankingAdapter
-            onPause()
-            onCancelPendingInputEvents()
-        }
-    }
-
     fun pegarRodadaDoenca(id_sessao: Int) {
         Service.retrofit.listarSessao(
             id_sessao = id_sessao
         ).enqueue(object : Callback<SessaoResponseListing> {
             override fun onFailure(call: Call<SessaoResponseListing>, t: Throwable) {
-                Log.d("Deu ruim", t.toString())
+                Log.d("Ruim: PegarRD", t.toString())
             }
             override fun onResponse(call: Call<SessaoResponseListing>, response: Response<SessaoResponseListing>) {
-                Log.d("Nice", response.toString())
+                Log.d("Bom: PegarRD", response.toString())
 
                 if (response.isSuccessful) {
                     val resposta = response.body()!!
+
                     rodada = resposta.sessao.rodada
                     doencaRodada = resposta.ultimaDoenca
                 }
                 else {
-                    Log.d("Erro do banco", response.message())
+                    Log.d("Erro banco: PegarRD", response.message())
                     context?.let { ErrorCases().error(it)}
                 }
             }
         })
+    }
+
+    private fun configureRecyclerViewRanking(list: RankingResponse) {
+        val rankingAdapter: RankingAdapter = RankingAdapter(list)
+        recyclerRanking.apply {
+            layoutManager = LinearLayoutManager(context)
+            isComputingLayout
+            adapter = rankingAdapter
+            onPause()
+            onCancelPendingInputEvents()
+        }
     }
 
     fun ranking(id_sessao: Int){
@@ -230,6 +231,8 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
                         ranking.jogadores.forEach { quantidadeJogadores.add((it.nome)) }
 
                         quantidadeJogadores.removeAt(0)
+
+                        txtQtdeJogadores.text = "${quantidadeJogadores.size} jogadores"
 
                         if (quantidadeJogadores.size < 2) {
                             val jogador = requireArguments().getString("jogador_nome").toString()
@@ -263,9 +266,10 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
     }
 
     private fun configureRecyclerViewDicas(list: ArrayList<String>) {
-        dicasAdapter = DicasAdapter(list)
+        val dicasAdapter: DicasAdapter = DicasAdapter(list)
         recyclerDicas.apply {
             layoutManager = LinearLayoutManager(activity)
+            isComputingLayout
             adapter= dicasAdapter
             onCancelPendingInputEvents()
             onPause()
@@ -284,7 +288,8 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
 
                 if (response.isSuccessful) {
                     val resposta = response.body()!!
-                    listDicas = arrayListOf("")
+
+                    var listDicas: ArrayList<String> = arrayListOf("")
 
                     if(resposta.dicas.sintomas.isNotEmpty())
                         resposta.dicas.sintomas.forEach { listDicas.add(it.nome) }
@@ -293,6 +298,7 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
                     if(resposta.dicas.transmicao.isNotEmpty())
                         resposta.dicas.transmicao.forEach { listDicas.add(it.nome) }
 
+                    listDicas.removeAt(0)
                     configureRecyclerViewDicas(listDicas)
                 }
                 else {
@@ -305,7 +311,7 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
             dicas(id_sessao)
         }
     }
-      
+
     fun listarSessao(id_sessao: Int) {
         Service.retrofit.listarSessao(
             id_sessao = id_sessao
@@ -414,7 +420,3 @@ class RoomAdivinhadorFragment :  Fragment(), View.OnClickListener {
         })
     }
 }
-
-
-
-

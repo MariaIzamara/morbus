@@ -4,28 +4,86 @@
     android:id="@+id/roomDiqueiroDicas"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="20dp"
-    android:layout_marginTop="40dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="20dp"
     tools:context=".ui.main.MainActivity">
-
-    <TextView
-        android:id="@+id/txtDiqueiro"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/menuLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/txt_diqueiro"
-        android:textColor="@color/colorText"
-        android:textSize="30sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorMenu">
 
-    <LinearLayout
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:padding="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="1dp"
+            android:background="@null"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:text="@string/interativo"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imageLogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/game"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menuLayout">
+
+        <LinearLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="@color/colorAccent"
+                android:text="@string/txt_diqueiro"
+                android:layout_gravity="center"
+                android:textSize="20sp" />
+
+            <Chronometer
+                android:id="@+id/diqueirotempoCronometro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:textSize="20sp"
+                android:fontFamily="@font/clarity" />
+        </LinearLayout>
+
+        <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtDiqueiro"
         android:layout_marginBottom="10dp"
+        android:layout_below="@+id/title"
         android:orientation="horizontal">
 
         <TextView
@@ -35,16 +93,16 @@
             android:shadowColor="@color/colorAccent"
             android:text="@string/ranking"
             android:layout_gravity="center"
-            android:textColor="@color/colorText"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
-        <Chronometer
-            android:id="@+id/diqueirotempoCronometro"
+        <TextView
+            android:id="@+id/txtQtdeJogadores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="end"
-            android:fontFamily="@font/lanehum"
+            android:textSize="14sp"
+            tools:text = "XX jogadores online"
             />
     </LinearLayout>
 
@@ -76,75 +134,29 @@
             android:id="@+id/nomeDoenca"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_gravity="center"
-            tools:text="DOENÇA SELECIONADA: XX" />
+            tools:text="DOENÇA SELECIONADA: UM NOME MUITO GRANDE DE DOENÇA" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/envieDicas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Envie dicas para os Adivinhadores:"
-        android:textSize="15sp"
-        android:layout_above="@+id/diqueiroTxtSintomas"/>
-
-    <TextView
-        android:id="@+id/diqueiroTxtSintomas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/diqueiroSpinnerSintoma"
-        android:text="@string/txt_sintomas"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/dicas_disponiveis"
         android:textSize="18sp"
-        android:layout_marginTop="20dp" />
+        android:layout_above="@+id/diqueiroSpinnerDicas"/>
 
     <Spinner
-        android:id="@+id/diqueiroSpinnerSintoma"
-        style="@style/spinnerTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/diqueiroTxtPrevencoes"
-        android:layout_marginTop="10dp"
-        android:dropDownWidth="wrap_content"
-        android:scrollbarSize="4dp" />
-
-    <TextView
-        android:id="@+id/diqueiroTxtPrevencoes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/diqueiroSpinnerPrevencao"
-        android:text="@string/txt_prevencoes"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp" />
-
-    <Spinner
-        android:id="@+id/diqueiroSpinnerPrevencao"
-        style="@style/spinnerTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/diqueiroTxtTransmissoes"
-        android:layout_marginTop="10dp"
-        android:dropDownWidth="wrap_content"
-        android:scrollbarSize="4dp" />
-
-    <TextView
-        android:id="@+id/diqueiroTxtTransmissoes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/diqueiroSpinnerTransmicao"
-        android:text="@string/txt_tranmissoes"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp" />
-
-    <Spinner
-        android:id="@+id/diqueiroSpinnerTransmicao"
+        android:id="@+id/diqueiroSpinnerDicas"
         style="@style/spinnerTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/diqueiroBtnDicas"
-        android:layout_marginTop="10dp"
-        android:dropDownWidth="wrap_content"
+        android:dropDownWidth="match_parent"
+        android:spinnerMode="dialog"
         android:scrollbarSize="4dp" />
 
     <Button
@@ -153,11 +165,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/roundbutton"
-        android:ems="5"
-        android:text="@string/btn_enviar_dica"
-        />
+        android:ems="6"
+        android:text="@string/btn_enviar_dica" />
 
     <ProgressBar
         android:id="@+id/diqueiroProgressBar"
@@ -166,7 +177,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/diqueiroBtnDicas"
         android:layout_alignBottom="@+id/diqueiroBtnDicas"
-        android:layout_alignLeft="@+id/diqueiroBtnDicas"
-        android:layout_alignRight="@+id/diqueiroBtnDicas"/>
+        android:layout_alignStart="@+id/diqueiroBtnDicas"
+        android:layout_alignEnd="@+id/diqueiroBtnDicas"/>
 
+</RelativeLayout>
 </RelativeLayout>

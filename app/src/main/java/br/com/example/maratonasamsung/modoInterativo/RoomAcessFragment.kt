@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -15,15 +16,22 @@ import br.com.example.maratonasamsung.model.Requests.SalaRequest
 import br.com.example.maratonasamsung.model.Responses.SalaResponse
 import br.com.example.maratonasamsung.data.service.ErrorCases
 import br.com.example.maratonasamsung.data.service.Service
+import br.com.example.maratonasamsung.model.Responses.RankingResponse
+import br.com.example.maratonasamsung.model.Responses.StatusBoolean
 import kotlinx.android.synthetic.main.fragment_room_acess.*
+import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 class RoomAcessFragment : Fragment(), View.OnClickListener {
 
     var navController: NavController? = null
     var clicavel = true
+    var bool: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +46,14 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         view.findViewById<Button>(R.id.acessBtnContinuar).setOnClickListener(this)
+        view.findViewById<ImageButton>(R.id.btn_back).setOnClickListener(this)
 
         acessProgressBar.visibility = View.INVISIBLE;
     }
 
     override fun onClick(v: View?) {
         when(v!!.id){
+            R.id.btn_back -> activity?.onBackPressed()
             R.id.acessBtnContinuar -> {
 
                 if(clicavel) {
@@ -55,7 +65,7 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
                     }
                     else if(acessEditNomeSala.text.toString() != "" && acessEditSenha.text.toString() != "") {
                         acessBtnContinuar.setText("")
-                        acessProgressBar.visibility = View.VISIBLE;
+                        acessProgressBar.visibility = View.VISIBLE
                         clicavel = false
 
                         acessarSala()
@@ -88,7 +98,7 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
                             acessEditSenha.setText("")
 
                             clicavel = true
-                            acessProgressBar.visibility = View.INVISIBLE;
+                            acessProgressBar.visibility = View.INVISIBLE
                             acessBtnContinuar.setText(R.string.btn_continuar)
                         }
                     }
@@ -97,8 +107,9 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
                         val duracao = Toast.LENGTH_SHORT
                         val toast = Toast.makeText(context, texto, duracao)
                         toast.show()
-                        acessEditNomeSala.setText("")
+
                         acessEditSenha.setText("")
+                        acessEditNomeSala.setText("")
 
                         clicavel = true
                         acessProgressBar.visibility = View.INVISIBLE;
@@ -142,7 +153,8 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
                     parametros.putString("sala_nome", nome)
                     parametros.putString("sala_senha", senha)
 
-                    navController!!.navigate(R.id.action_roomAcessFragment_to_roomAcessNameFragment, parametros)
+                    jogadores(sessao.id_sessao, parametros)
+                    verificarPartida(sessao.id_sessao)
                 }
                 else {
                     Log.d("Erro banco: CadSessao", response.message())
@@ -155,4 +167,102 @@ class RoomAcessFragment : Fragment(), View.OnClickListener {
             }
         })
     }
+
+    fun jogadores(id_sessao: Int, parametros: Bundle){
+        Service.retrofit.ranking(
+            id_sessao = id_sessao
+        ).enqueue(object : Callback<RankingResponse> {
+            override fun onFailure(call: Call<RankingResponse>, t: Throwable) {
+                Log.d("Ruim: jogadores", t.toString())
+            }
+
+            override fun onResponse(call: Call<RankingResponse>, response: Response<RankingResponse>) {
+                Log.d("Bom: jogadores", response.body().toString())
+
+                if (response.isSuccessful) {
+
+                    val jogadores = response.body()!!
+
+                    if (!jogadores.status) {
+                        val texto = "Erro ao pegar ranking"
+                        val duracao = Toast.LENGTH_SHORT
+                        val toast = Toast.makeText(context, texto, duracao)
+                        toast.show()
+
+                        clicavel = true
+                        acessProgressBar.visibility = View.INVISIBLE;
+                        acessBtnContinuar.setText(R.string.btn_continuar)
+                    }
+                    else {
+                        val quantidadeJogadores: java.util.ArrayList<String> = arrayListOf("")
+                        jogadores.jogadores.forEach { quantidadeJogadores.add((it.nome)) }
+
+                        quantidadeJogadores.removeAt(0)
+
+                        if(quantidadeJogadores.isNotEmpty()) {
+                            if (!bool)
+                                navController!!.navigate(
+                                    R.id.action_roomAcessFragment_to_roomAcessNameFragment,
+                                    parametros
+                                )
+                            else {
+                                val texto = "A partida já começou, tente outra sala"
+                                val duracao = Toast.LENGTH_SHORT
+                                val toast = Toast.makeText(context, texto, duracao)
+                                toast.show()
+
+                                acessEditSenha.setText("")
+                                acessEditNomeSala.setText("")
+
+                                clicavel = true
+                                acessProgressBar.visibility = View.INVISIBLE;
+                                acessBtnContinuar.setText(R.string.btn_continuar)
+                            }
+                        }
+                        else {
+                            val texto = "Sala desativada, acesse outra ou tente criar uma nova"
+                            val duracao = Toast.LENGTH_SHORT
+                            val toast = Toast.makeText(context, texto, duracao)
+                            toast.show()
+
+                            acessEditSenha.setText("")
+                            acessEditNomeSala.setText("")
+
+                            clicavel = true
+                            acessProgressBar.visibility = View.INVISIBLE;
+                            acessBtnContinuar.setText(R.string.btn_continuar)
+                        }
+                    }
+                }
+                else {
+                    Log.d("Erro banco: jogadores", response.message())
+                    context?.let { ErrorCases().error(it)}
+
+                    clicavel = true
+                    acessProgressBar.visibility = View.INVISIBLE;
+                    acessBtnContinuar.setText(R.string.btn_continuar)
+                }
+            }
+        })
+    }
+    fun verificarPartida(id_sessao: Int) {
+        Service.retrofit.verificarPartida(
+            id_sessao = id_sessao
+        ).enqueue(object : Callback<StatusBoolean> {
+            override fun onFailure(call: Call<StatusBoolean>, t: Throwable) {
+                Log.d("Ruim: Começar Partida", t.toString())
+            }
+            override fun onResponse(call: Call<StatusBoolean>, response: Response<StatusBoolean>) {
+                Log.d("Bom: Começar Partida", response.body().toString())
+                if (response.isSuccessful)
+                    bool = response.body()?.status!!
+
+                else {
+                    Log.d("Erro banco: ComeçarPart", response.message())
+                    context?.let { ErrorCases().error(it)}
+                }
+            }
+        })
+    }
+
 }

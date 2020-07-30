@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -28,7 +29,6 @@ class RoomAcessNameFragment : Fragment(), View.OnClickListener {
     val parametros = Bundle()
     var rodada: Int = 0
     var clicavel = true
-    var quantidadeJogadores = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +43,14 @@ class RoomAcessNameFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         view.findViewById<Button>(R.id.acessnameBtnAcessarSala).setOnClickListener(this)
+        view.findViewById<ImageButton>(R.id.btn_back).setOnClickListener(this)
 
         acessNameProgressBar.visibility = View.INVISIBLE;
     }
 
     override fun onClick(v: View?) {
         when(v!!.id){
+            R.id.btn_back -> activity?.onBackPressed()
             R.id.acessnameBtnAcessarSala -> {
 
                 if(clicavel) {
@@ -65,7 +67,6 @@ class RoomAcessNameFragment : Fragment(), View.OnClickListener {
                         acessNameProgressBar.visibility = View.VISIBLE;
                         clicavel = false
 
-                        jogadores(id_sessao)
                         jogadorNovo(id_sessao)
                     }
                 }
@@ -121,15 +122,7 @@ class RoomAcessNameFragment : Fragment(), View.OnClickListener {
                         parametros.putStringArrayList("doencas", doencas)
                         parametros.putString("jogador_nome", acessnameEditUsuario.text.toString())
 
-                        if(quantidadeJogadores >= 1)
-                            navController!!.navigate(R.id.action_roomAcessNameFragment_to_aguardandoComecarFragment, parametros)
-                        else {
-                            val sala_nome = requireArguments().getString("sala_nome").toString()
-                            val sala_senha = requireArguments().getString("sala_senha").toString()
-                            parametros.putString("sala_nome", sala_nome)
-                            parametros.putString("sala_senha", sala_senha)
-                            navController!!.navigate(R.id.action_roomAcessNameFragment_to_aguardandoJogadoresFragment, parametros)
-                        }
+                        navController!!.navigate(R.id.action_roomAcessNameFragment_to_aguardandoComecarFragment, parametros)
                     }
                 }
                 else {
@@ -139,42 +132,6 @@ class RoomAcessNameFragment : Fragment(), View.OnClickListener {
                     clicavel = true
                     acessNameProgressBar.visibility = View.INVISIBLE;
                     acessnameBtnAcessarSala.setText(R.string.btn_acessar)
-                }
-            }
-        })
-    }
-
-    fun jogadores(id_sessao: Int){
-        Service.retrofit.ranking(
-            id_sessao = id_sessao
-        ).enqueue(object : Callback<RankingResponse> {
-            override fun onFailure(call: Call<RankingResponse>, t: Throwable) {
-                Log.d("Ruim: jogadores", t.toString())
-            }
-
-            override fun onResponse(call: Call<RankingResponse>, response: Response<RankingResponse>) {
-                Log.d("Bom: jogadores", response.body().toString())
-
-                if (response.isSuccessful) {
-                    val jogadores = response.body()!!
-
-                    if (!jogadores.status) {
-                        val texto = "Erro ao pegar ranking"
-                        val duracao = Toast.LENGTH_SHORT
-                        val toast = Toast.makeText(context, texto, duracao)
-                        toast.show()
-                    }
-                    else {
-                        val quantidade: ArrayList<String> = arrayListOf("")
-                        jogadores.jogadores.forEach { quantidade.add((it.nome)) }
-
-                        quantidade.removeAt(0)
-                        quantidadeJogadores = quantidade.size
-                    }
-                }
-                else {
-                    Log.d("Erro banco: jogadores", response.message())
-                    context?.let { ErrorCases().error(it)}
                 }
             }
         })
